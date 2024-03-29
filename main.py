@@ -24,19 +24,19 @@ if __name__ == "__main__":
         """
     ]
     
-    data = ["raw_turbine_data.csv", "raw_weather_sensor.csv"]
+    data_file = ["raw_turbine_data.csv", "raw_weather_sensor.csv"]
     
-    for i in range(2):
-        
-        df = pd.DataFrame()
-        
-        df = pd.read_csv(data_folder + "\\" + data[i])
-        df['date'] = df['date'].apply(preprocess_date)
-        
-        with Cluster(['127.0.0.1']).connect('iotsolution') as session:
-            
-            for j in range(len(df)):
-                
-                row = df.iloc[j]
-                data = tuple([uuid4(), *row])
-                session.execute(insert_query[i], data)
+    with Cluster(['127.0.0.1']).connect('iotsolution') as session:
+    
+        for i in range(len(insert_query)):
+            try:
+                df = pd.DataFrame()
+                df = pd.read_csv(data_folder + "\\" + data_file[i])
+                df['date'] = df['date'].apply(preprocess_date)
+    
+                for j in range(len(df)):
+                    row = df.iloc[j]
+                    data = tuple([uuid4(), *row])
+                    session.execute(insert_query[i], data)
+            except Exception as e:
+                print(str(e))
