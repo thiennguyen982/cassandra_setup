@@ -27,6 +27,14 @@ if __name__ == "__main__":
     data_file = ["raw_turbine_data.csv", "raw_weather_sensor.csv"]
     
     with Cluster(['127.0.0.1']).connect('iotsolution') as session:
+
+        with open("de_project.cql", 'r') as cql_file:
+            cql_queries =  cql_file.read()
+
+        for query in cql_queries.split(":"):
+            query = query.strip()
+            if query:
+                session.execute(query)
     
         for i in range(len(insert_query)):
             try:
