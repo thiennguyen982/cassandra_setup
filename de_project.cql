@@ -6,53 +6,56 @@ WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
 USE iotsolution;
 
 CREATE TABLE bronze_turbine_sensor (
-    id UUID PRIMARY KEY,
+    id UUID,
     recorded_date DATE,
     device_id TEXT,
     window TIMESTAMP,
     rpm FLOAT,
-    angle FLOAT
+    angle FLOAT,
+    PRIMARY KEY(device_id, recorded_date, id)
 );
 
 CREATE TABLE bronze_weather_sensor (
-    id UUID PRIMARY KEY,
+    id UUID,
+    device_id TEXT,
     recorded_date DATE,
     window TIMESTAMP,
     temperature FLOAT,
     humidity FLOAT,
     windspeed FLOAT,
-    winddirection TEXT
-);
+    winddirection TEXT,
+    PRIMARY KEY (device_id, recorded_date, window)
+) WITH CLUSTERING ORDER BY (recorded_date DESC, window DESC);
 
 CREATE TABLE silver_aggregate_turbine (
-    id UUID PRIMARY KEY,
-    recorded_date DATE,
+    id UUID,
+    recorded_date TEXT,
     device_id TEXT,
-    time_interval TIME,
     rpm FLOAT,
-    angle FLOAT
+    angle FLOAT,
+    PRIMARY KEY (device_id, recorded_date, id)
 );
 
 CREATE TABLE silver_aggregate_weather (
-    id UUID PRIMARY KEY,
-    recorded_date DATE,
-    time_interval TIME,
+    id UUID,
+    device_id TEXT,
+    recorded_date TEXT,
     temperature FLOAT,
     humidity FLOAT,
     windspeed FLOAT,
-    winddirection TEXT
+    winddirection TEXT,
+    PRIMARY KEY (device_id, recorded_date, id)
 );
 
 CREATE TABLE gold_enriched_turbine (
-    id UUID PRIMARY KEY,
-    recorded_date DATE,
-    time_interval TIME,
+    id UUID,
+    device_id TEXT,
+    recorded_date TEXT,
     rpm FLOAT,
     angle FLOAT,
     temperature FLOAT,
     humidity FLOAT,
     windspeed FLOAT,
-    winddirection TEXT
+    winddirection TEXT,
+    PRIMARY KEY (device_id, id)
 );
-
-ALTER TABLE iotsolution.bronze_weather_sensor ADD DEVICE_ID text;
