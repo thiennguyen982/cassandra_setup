@@ -57,5 +57,5 @@ CREATE TABLE gold_enriched_turbine (
     humidity FLOAT,
     windspeed FLOAT,
     winddirection TEXT,
-    PRIMARY KEY (device_id, id)
+    PRIMARY KEY (device_id, recorded_date)
 );
