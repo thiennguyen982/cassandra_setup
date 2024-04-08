@@ -5,6 +5,9 @@ from datetime import datetime as dt
 from uuid import uuid4
 from types import FunctionType
 import logging
+import config
+
+cassandra_ip = config.IP
 
 def extract_and_transform_data_to_gold(*args, **kwargs):
     session = args[0]
@@ -38,5 +41,5 @@ def extract_and_transform_data_to_gold(*args, **kwargs):
 
 if __name__ == "__main__":
     
-    with Cluster(['127.0.0.1']).connect() as session:
+    with Cluster([cassandra_ip]).connect() as session:
         extract_and_transform_data_to_gold(session)

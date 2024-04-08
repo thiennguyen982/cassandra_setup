@@ -4,6 +4,9 @@ from datetime import datetime as dt
 from uuid import uuid4
 from types import FunctionType
 import logging
+import config
+
+cassandra_ip = config.IP
 
 def convert_date(*args, **kwargs):
     date_obj = args[0]
@@ -100,7 +103,7 @@ if __name__ == "__main__":
     
     functions_to_call = [extract_and_transform_bronze_turbine_data, extract_and_transform_bronze_weather_data]
 
-    with Cluster(['127.0.0.1']).connect() as session:
+    with Cluster([cassandra_ip]).connect() as session:
         for func in functions_to_call:
             if isinstance(func, FunctionType):
                 func(session)

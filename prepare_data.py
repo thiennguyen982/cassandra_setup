@@ -3,6 +3,9 @@ from cassandra.cluster import Cluster
 from uuid import uuid4
 from datetime import datetime as dt
 import os
+import config
+
+cassandra_ip = config.IP
 
 path = os.getcwd()
 data_folder = path + "\data"
@@ -74,7 +77,7 @@ if __name__ == "__main__":
     data_file = ["raw_turbine_data.csv", "raw_weather_sensor.csv", "sample_enriched_data.csv",
                  "sample_aggregate_turbine.csv", "sample_aggregate_weather.csv"]
     
-    with Cluster(['127.0.0.1']).connect() as session:
+    with Cluster([cassandra_ip]).connect() as session:
         
         create_table("de_project.cql", session)
         
